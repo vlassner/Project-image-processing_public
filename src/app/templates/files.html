@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block main %}
+    <h1>{{user_id}}'s Files</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>File Name</th>
+                <th>Date Uploaded</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for file in files %}
+            <tr>
+                <td>{{ file.name }}</td>
+                <td>{{ file.date_uploaded.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                <td>{{ file.status }}</td>
+                <td>
+                    <form action="{{ url_for('process_file', file_id=file.id) }}" method="post" style="display:inline;">
+                        {% if file.status == 'processed' %}
+                            <button class="button" type="submit" disabled>process</button>
+                        {% else %}
+                            <button class="button" type="submit">process</button>
+                        {% endif %}
+                    </form>
+                    <form action="{{ url_for('delete_file', file_id=file.id) }}" method="post" style="display:inline;">
+                        <button class="button" type="submit">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div style="margin-top: 20px;">
+        <form action="{{ url_for('upload_file') }}" method="post" enctype="multipart/form-data" style="display:inline;">
+            <button class="button" type="submit">Upload</button>
+        </form>
+        <form action="{{ url_for('signout') }}" method="post" style="display:inline;">
+            <button class="button" type="submit">Sign Out</button>
+        </form>
+    </div>
+{% endblock %}
